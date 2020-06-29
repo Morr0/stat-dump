@@ -4,7 +4,8 @@
           <input v-model="currentSelected.name" type="text" placeholder="Table name" required>
           <input v-model="currentSelected.x" type="text" placeholder="Independent (x-axis)" required>
           <input v-model="currentSelected.y" type="text" placeholder="Dependent (y-axis)" required>
-          <select v-if="tables.length > 0">
+          <select ref="comboBox" v-if="tables.length > 0" @change="selectedTable">
+              <option value="choose">Choose a table</option>
               <option v-for="table in tables" :key="table.id" :value="table.id">
                   {{table.name}}
               </option>
@@ -22,17 +23,19 @@
         <br>
         <br>
         <br>
-        <h2>{{currentSelected.name}}</h2>
-        <table>
-            <tr>
-                <th>{{currentSelected.x}}</th>
-                <th>{{currentSelected.y}}</th>
-            </tr>
-            <tr v-for="entry in currentSelected.entry" :key="entry.x + entry.y">
-                <td>{{entry.x}}</td>
-                <td>{{entry.y}}</td>
-            </tr>
-        </table>
+        <div v-if="currentSelected.name">
+            <h2>{{currentSelected.name}}</h2>
+            <table>
+                <tr>
+                    <th>{{currentSelected.x}}</th>
+                    <th>{{currentSelected.y}}</th>
+                </tr>
+                <tr v-for="entry in currentSelected.entry" :key="entry.x + entry.y">
+                    <td>{{entry.x}}</td>
+                    <td>{{entry.y}}</td>
+                </tr>
+            </table>
+        </div>
   </div>
 </template>
 
@@ -53,6 +56,7 @@ export default {
     },
     data(){
         return {
+            selectedIndex: -1,
             currentSelected: table,
             newEntry: {}, // Consists of x and y
         };
@@ -70,10 +74,31 @@ export default {
         },
         addEntry(){
             if (this.currentSelected.name){
-                this.currentSelected.entry.push(this.newEntry);
+                // this.currentSelected.entry.push(this.newEntry);
+                this.$store.commit("newEntry", {
+                    index: this.selectedIndex,
+                    entry: this.newEntry,
+                });
+                this.newEntry = {};
+
+            }
+        },
+        selectedTable(){
+            const index = this.$refs.comboBox.selectedIndex;
+            if (index > 0){ // To only select dynamic options
+                this.currentSelected = this.tables[index - 1];
+                this.selectedIndex = index - 1;
+            } else {
+                this.selectedIndex = -1;
+                this.currentSelected = this.table;
                 this.newEntry = {};
             }
         }
+    },
+    watch: {
+        currentSelected: function(_new, old){
+            console.log(_new, old);
+        },
     }
 }
 </script>

@@ -12,6 +12,9 @@ export default new Vuex.Store({
       newTable(state, table){
           state.tables.push(table);
       },
+      newEntry(state, {index, entry}){
+          state.tables[index].entry.push(entry);
+      }
   },
   actions: {
   },
