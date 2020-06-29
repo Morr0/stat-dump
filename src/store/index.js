@@ -8,6 +8,9 @@ export default new Vuex.Store({
       tables: []
   },
   mutations: {
+      newTable(state, table){
+          state.tables.push(table);
+      }
   },
   actions: {
   },
