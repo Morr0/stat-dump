@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import createPersistedState from "vuex-persistedstate";
 
 Vue.use(Vuex)
 
@@ -10,10 +11,13 @@ export default new Vuex.Store({
   mutations: {
       newTable(state, table){
           state.tables.push(table);
-      }
+      },
   },
   actions: {
   },
   modules: {
-  }
+  },
+  plugins: [
+    createPersistedState(),
+  ]
 })

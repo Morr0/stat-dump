@@ -10,6 +10,13 @@
               </option>
           </select>
           <button type="button" @click.prevent="newTable">Create Table</button>
+          <br>
+          <div v-if="currentSelected.name && currentSelected.x && currentSelected.y && currentSelected.id">
+              <span>Add an entry</span>
+              <input type="text" v-model="newEntry.x" placeholder="X">
+              <input type="text" v-model="newEntry.y" placeholder="Y">
+              <button type="button" @click.prevent="addEntry">Add Entry</button>
+          </div>
       </form>
       <!-- <Grid v-if="currentSelected" :cols="[currentSelected.x, currentSelected.y]" :rows="[currentSelected.dataX, currentSelected.dataY]" /> -->
         <br>
@@ -47,6 +54,7 @@ export default {
     data(){
         return {
             currentSelected: table,
+            newEntry: {}, // Consists of x and y
         };
     },
     computed: {
@@ -60,6 +68,12 @@ export default {
             this.currentSelected.data = [];
             this.$store.commit("newTable", this.currentSelected);
         },
+        addEntry(){
+            if (this.currentSelected.name){
+                this.currentSelected.entry.push(this.newEntry);
+                this.newEntry = {};
+            }
+        }
     }
 }
 </script>
