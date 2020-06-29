@@ -12,7 +12,7 @@
           </select>
           <button type="button" @click.prevent="newTable">Create Table</button>
           <br>
-          <div v-if="currentSelected.name && currentSelected.x && currentSelected.y && currentSelected.id">
+          <div v-if="selectedIndex !== -1">
               <span>Add an entry</span>
               <input type="text" v-model="newEntry.x" placeholder="X">
               <input type="text" v-model="newEntry.y" placeholder="Y">
@@ -23,7 +23,7 @@
         <br>
         <br>
         <br>
-        <div v-if="currentSelected.name">
+        <div v-if="selectedIndex !== -1">
             <h2>{{currentSelected.name}}</h2>
             <table>
                 <tr>
@@ -40,7 +40,7 @@
 </template>
 
 <script>
-const table = {
+const _table = {
     id: "",
     name: "",
     x: "",
@@ -57,7 +57,7 @@ export default {
     data(){
         return {
             selectedIndex: -1,
-            currentSelected: table,
+            currentSelected: _table,
             newEntry: {}, // Consists of x and y
         };
     },
@@ -73,7 +73,7 @@ export default {
             this.$store.commit("newTable", this.currentSelected);
         },
         addEntry(){
-            if (this.currentSelected.name){
+            if (this.selectedIndex !== -1){
                 // this.currentSelected.entry.push(this.newEntry);
                 this.$store.commit("newEntry", {
                     index: this.selectedIndex,
@@ -88,18 +88,13 @@ export default {
             if (index > 0){ // To only select dynamic options
                 this.currentSelected = this.tables[index - 1];
                 this.selectedIndex = index - 1;
-            } else {
+            } else { // To empty the fields
                 this.selectedIndex = -1;
-                this.currentSelected = this.table;
+                this.currentSelected = _table;
                 this.newEntry = {};
             }
         }
     },
-    watch: {
-        currentSelected: function(_new, old){
-            console.log(_new, old);
-        },
-    }
 }
 </script>
 
